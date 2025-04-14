@@ -2,3 +2,5 @@
 /vendor
 .env
 requirements.txt
+packages.json
+/data

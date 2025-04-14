@@ -9,37 +9,29 @@ Pre-built PHP extensions for Heroku that are not included or fully supported by 
 - [MessagePack](https://pecl.php.net/package/msgpack)
 - [igbinary](https://pecl.php.net/package/igbinary)
 
-The supported PHP versions are `8.1` to `8.3` on the `heroku-20` and `heroku-22` stacks.
+The supported PHP versions are `8.1` to `8.3` on the `heroku-20` and `heroku-24` stacks.
 
 Checkout the [demo app](https://php-extensions.herokuapp.com), or [browse the S3 bucket](https://s3.us-east-1.amazonaws.com/heroku-php-extensions/index.html).
 
 ## Usage
 
-Add the platform repository to your Heroku app:
-
-```bash
-heroku config:set HEROKU_PHP_PLATFORM_REPOSITORIES="https://relay.so/heroku/"
-```
-
-If you prefer using the AWS S3 repositories, add the corresponding repository to your Heroku app:
+Add the corresponding repository to your Heroku app:
 
 ```bash
 # heroku-20
-heroku config:set HEROKU_PHP_PLATFORM_REPOSITORIES="https://heroku-php-extensions.s3.amazonaws.com/dist-heroku-20-stable/"
+heroku config:set HEROKU_PHP_PLATFORM_REPOSITORIES="https://trainerplanapp-extensions.s3.amazonaws.com/dist-heroku-20-amd64-stable/"
 
 # heroku-22
-heroku config:set HEROKU_PHP_PLATFORM_REPOSITORIES="https://heroku-php-extensions.s3.amazonaws.com/dist-heroku-22-stable/"
+heroku config:set HEROKU_PHP_PLATFORM_REPOSITORIES="https://trainerplanapp-extensions.s3.amazonaws.com/dist-heroku-22-amd64-stable/"
+
+# heroku-24
+heroku config:set HEROKU_PHP_PLATFORM_REPOSITORIES="https://trainerplanapp-extensions.s3.amazonaws.com/dist-heroku-24-amd64-stable/"
 ```
 
 Next, add any of the extensions to `composer.json` as you usually would:
 
 ```bash
-composer require "ext-relay:*"
-composer require "ext-redis:*"
-composer require "ext-swoole:*"
-composer require "ext-openswoole:*"
-composer require "ext-msgpack:*"
-composer require "ext-igbinary:*"
+composer require "ext-extname:*"
 ```
 
 ## Troubleshooting
@@ -71,39 +63,22 @@ Be sure to set all variables in your newly created `.env` file.
 
 ### Dockerfile
 
-Create a custom Dockerfile for `heroku-22`.
+Create a custom Dockerfile for `heroku-24`.
 
 ```
-cat vendor/heroku/heroku-buildpack-php/support/build/_docker/heroku-22.Dockerfile > docker/build/heroku-22.Dockerfile
-cat docker/heroku-22.Dockerfile >> docker/build/heroku-22.Dockerfile
+cat vendor/heroku/heroku-buildpack-php/support/build/_docker/heroku-24.Dockerfile > docker/build/heroku-24.Dockerfile
+cat docker/heroku-24.Dockerfile >> docker/build/heroku-24.Dockerfile
 ```
 
 ### Build
 
 ```bash
 # Docker build
-docker build --pull --tag heroku-22 --file docker/build/heroku-22.Dockerfile .
+docker build --pull --tag heroku-24 --file docker/build/heroku-24.Dockerfile .
 
 # Build libraries
-docker run --rm -ti --env-file=.env heroku-22 bob build --overwrite libraries/liblzf-3.6
-docker run --rm -ti --env-file=.env heroku-22 bob build --overwrite libraries/lz4-1.9.3
-docker run --rm -ti --env-file=.env heroku-22 bob build --overwrite libraries/zstd-1.4.9
+docker run --rm -ti --env-file=.env heroku-24 bob build --overwrite libraries/libname
 
 # Build igbinary
-docker run --rm -ti --env-file=.env heroku-22 bob build extensions/no-debug-non-zts-20230831/igbinary-3.2.15
-
-# Build msgpack
-docker run --rm -ti --env-file=.env heroku-22 bob build extensions/no-debug-non-zts-20230831/msgpack-2.2.0
-
-# Build phpredis
-docker run --rm -ti --env-file=.env heroku-22 bob build extensions/no-debug-non-zts-20230831/redis-6.0.2
-
-# Build relay
-docker run --rm -ti --env-file=.env heroku-22 bob build extensions/no-debug-non-zts-20230831/relay-0.6.8
-
-# Build swoole
-docker run --rm -ti --env-file=.env heroku-22 bob build extensions/no-debug-non-zts-20230831/swoole-4.8.13
-
-# Build openswoole
-docker run --rm -ti --env-file=.env heroku-22 bob build extensions/no-debug-non-zts-20230831/openswoole-4.12.1
+docker run --rm -ti --env-file=.env heroku-24 bob build extensions/no-debug-non-zts-20230831/profiler-1.0.4
 ```
