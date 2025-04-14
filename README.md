@@ -31,7 +31,7 @@ heroku config:set HEROKU_PHP_PLATFORM_REPOSITORIES="https://trainerplanapp-exten
 Next, add any of the extensions to `composer.json` as you usually would:
 
 ```bash
-composer require "ext-extname:*"
+composer require "ext-extname:*" --ignore-platform-reqs
 ```
 
 ## Troubleshooting
@@ -50,7 +50,7 @@ Before continuing, read and understand the [official build instructions](https:/
 
 ```bash
 # Install Composer dependencies
-composer install
+composer install [--ignore-platform-reqs]
 
 # Copy Python requirements
 cp vendor/heroku/heroku-buildpack-php/requirements.txt .

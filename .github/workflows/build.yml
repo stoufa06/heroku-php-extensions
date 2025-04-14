@@ -24,6 +24,7 @@ jobs:
         stack:
           - heroku-20
           - heroku-22
+          - heroku-24-amd64
         series:
           - 20210902 # PHP 8.1
           - 20220829 # PHP 8.2
@@ -47,28 +48,7 @@ jobs:
       - name: Docker build
         run: docker build --pull --tag ${{ matrix.stack }} --file docker/build/${{ matrix.stack }}.Dockerfile .
 
-      - name: Build liblzf library
-        shell: 'script -q -e -c "bash {0}"'
-        run: |
-          docker run --rm -ti \
-            --env-file=${BUILDPACK}/support/build/_docker/env.default \
-            ${{ matrix.stack }} deploy.sh --overwrite libraries/liblzf-3.6
-
-      - name: Build lz4 library
-        shell: 'script -q -e -c "bash {0}"'
-        run: |
-          docker run --rm -ti \
-            --env-file=${BUILDPACK}/support/build/_docker/env.default \
-            ${{ matrix.stack }} deploy.sh --overwrite libraries/lz4-1.9.3
-
-      - name: Build zstd library
-        shell: 'script -q -e -c "bash {0}"'
-        run: |
-          docker run --rm -ti \
-            --env-file=${BUILDPACK}/support/build/_docker/env.default \
-            ${{ matrix.stack }} deploy.sh --overwrite libraries/zstd-1.4.9
-
-      - name: Build igbinary extension
+      - name: Build profiler extension
         shell: 'script -q -e -c "bash {0}"'
         run: |
           docker run --rm -ti \
@@ -76,78 +56,6 @@ jobs:
             --env UPSTREAM_S3_PREFIX=dist-${{ matrix.stack }}-stable/ \
             --env-file=${BUILDPACK}/support/build/_docker/env.default \
             ${{ matrix.stack }} deploy.sh --overwrite \
-            extensions/no-debug-non-zts-${{ matrix.series }}/igbinary-3.2.15
+            extensions/no-debug-non-zts-${{ matrix.series }}/profiler-1.0.4
 
-      - name: Build msgpack extension
-        shell: 'script -q -e -c "bash {0}"'
-        run: |
-          docker run --rm -ti \
-            --env UPSTREAM_S3_BUCKET=lang-php \
-            --env UPSTREAM_S3_PREFIX=dist-${{ matrix.stack }}-stable/ \
-            --env-file=${BUILDPACK}/support/build/_docker/env.default \
-            ${{ matrix.stack }} deploy.sh --overwrite \
-            extensions/no-debug-non-zts-${{ matrix.series }}/msgpack-2.2.0
-
-      - name: Build redis extension
-        shell: 'script -q -e -c "bash {0}"'
-        run: |
-          docker run --rm -ti \
-            --env UPSTREAM_S3_BUCKET=lang-php \
-            --env UPSTREAM_S3_PREFIX=dist-${{ matrix.stack }}-stable/ \
-            --env-file=${BUILDPACK}/support/build/_docker/env.default \
-            ${{ matrix.stack }} deploy.sh --overwrite \
-            extensions/no-debug-non-zts-${{ matrix.series }}/redis-6.0.2
-
-      - name: Build relay extension
-        shell: 'script -q -e -c "bash {0}"'
-        run: |
-          docker run --rm -ti \
-            --env UPSTREAM_S3_BUCKET=lang-php \
-            --env UPSTREAM_S3_PREFIX=dist-${{ matrix.stack }}-stable/ \
-            --env-file=${BUILDPACK}/support/build/_docker/env.default \
-            ${{ matrix.stack }} deploy.sh --overwrite \
-            extensions/no-debug-non-zts-${{ matrix.series }}/relay-0.6.8
-
-      - name: Build swoole 4.x extension
-        if: matrix.series <= 20220829
-        shell: 'script -q -e -c "bash {0}"'
-        run: |
-          docker run --rm -ti \
-            --env UPSTREAM_S3_BUCKET=lang-php \
-            --env UPSTREAM_S3_PREFIX=dist-${{ matrix.stack }}-stable/ \
-            --env-file=${BUILDPACK}/support/build/_docker/env.default \
-            ${{ matrix.stack }} deploy.sh --overwrite \
-            extensions/no-debug-non-zts-${{ matrix.series }}/swoole-4.8.13
-
-      - name: Build swoole 5.x extension
-        if: matrix.series >= 20230831
-        shell: 'script -q -e -c "bash {0}"'
-        run: |
-          docker run --rm -ti \
-            --env UPSTREAM_S3_BUCKET=lang-php \
-            --env UPSTREAM_S3_PREFIX=dist-${{ matrix.stack }}-stable/ \
-            --env-file=${BUILDPACK}/support/build/_docker/env.default \
-            ${{ matrix.stack }} deploy.sh --overwrite \
-            extensions/no-debug-non-zts-${{ matrix.series }}/swoole-5.1.1
-
-      - name: Build openswoole 4.x extension
-        if: matrix.series <= 20220829
-        shell: 'script -q -e -c "bash {0}"'
-        run: |
-          docker run --rm -ti \
-            --env UPSTREAM_S3_BUCKET=lang-php \
-            --env UPSTREAM_S3_PREFIX=dist-${{ matrix.stack }}-stable/ \
-            --env-file=${BUILDPACK}/support/build/_docker/env.default \
-            ${{ matrix.stack }} deploy.sh --overwrite \
-            extensions/no-debug-non-zts-${{ matrix.series }}/openswoole-4.12.1
-
-      - name: Build openswoole 22.x extension
-        if: matrix.series >= 20230831
-        shell: 'script -q -e -c "bash {0}"'
-        run: |
-          docker run --rm -ti \
-            --env UPSTREAM_S3_BUCKET=lang-php \
-            --env UPSTREAM_S3_PREFIX=dist-${{ matrix.stack }}-stable/ \
-            --env-file=${BUILDPACK}/support/build/_docker/env.default \
-            ${{ matrix.stack }} deploy.sh --overwrite \
-            extensions/no-debug-non-zts-${{ matrix.series }}/openswoole-22.1.0
+      

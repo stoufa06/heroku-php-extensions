@@ -5,11 +5,7 @@
     "license": "MIT",
     "require": {
         "php": "^8.1",
-        "ext-igbinary": "*",
-        "ext-msgpack": "*",
-        "ext-redis": "*",
-        "ext-relay": "*",
-        "ext-swoole": "*"
+        "ext-profiler": "*"
     },
     "require-dev": {
         "heroku/heroku-buildpack-php": "dev-main"
