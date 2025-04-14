@@ -18,7 +18,7 @@ jobs:
         stack:
           - heroku-20
           - heroku-22
-          - heroku-24-amd64
+          - heroku-24
 
     env:
       S3_BUCKET: heroku-php-extensions
